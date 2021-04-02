@@ -169,6 +169,9 @@ if __name__ == '__main__':
 			if (not handInImage and allPinsDown):
 				endTime = time.time()
 				elapsedTime = round(endTime - startTime, 2)
+				allPinsSetted = False
+				allPinsDown = False
+				setupFrameCounter = 0
 				print("FINISHED IN ", elapsedTime, "SECONDS")
 				start = False
 
