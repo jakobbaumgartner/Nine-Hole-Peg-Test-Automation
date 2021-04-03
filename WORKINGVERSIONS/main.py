@@ -9,7 +9,7 @@ from helperMethods import *
 from holdingArea import *
 
 # demo = True -> running test video, demo = False -> running camera
-demo = False
+demo = True
 
 settedPinsCounter = 0
 confirmedPins = 0
@@ -20,7 +20,13 @@ allPinsDown = False
 start = False
 
 if demo:
-    print("heelooo")
+    print("\n\n --- DEMO MODE --- \n")
+
+    demoImage0 = cv.imread('../DEMO/WIN_20210401_12_22_10_Pro.jpg')
+
+    cv.imshow('image',demoImage0)
+    cv.waitKey(0)
+    cv.destroyAllWindows()
 
 else:
 
@@ -106,5 +112,5 @@ else:
         cv.imshow('frame', frame)
         if cv.waitKey(1) & 0xFF == ord('q'):
             break
-        cap.release()
-        cv.destroyAllWindows()
+    cap.release()
+    cv.destroyAllWindows()

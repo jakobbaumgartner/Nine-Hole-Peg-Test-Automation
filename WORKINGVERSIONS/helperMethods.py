@@ -34,7 +34,7 @@ def gammaImage(grayImage, gamma):
     return gammaImg.astype(dtype)
 
 
-def rgbToHsv(self, rgbImage):
+def rgbToHsv(rgbImage):
     r = rgbImage[:, :, 2]
     g = rgbImage[:, :, 1]
     b = rgbImage[:, :, 0]
@@ -61,7 +61,7 @@ def rgbToHsv(self, rgbImage):
     return h, s, v
 
 
-def prepareImage(self, frame):
+def prepareImage(frame):
     # Gray image of frame.
     grayImg = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
     # HSV space of (colored) frame.
@@ -71,6 +71,6 @@ def prepareImage(self, frame):
     # Blurred gamma image.
     blurImg = cv.GaussianBlur(gammaImg, (3, 3), 0)
     # Automatic thresholding on blur image.
-    tH = self.calculateThreshold(self, blurImg)[1]
+    tH = calculateThreshold(blurImg)[1]
 
     return blurImg, tH, h, s, v
