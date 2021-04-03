@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 import time
 from tqdm import tqdm
 
+
+
 from camera import *
 from detection import *
 from helperMethods import *
@@ -37,6 +39,7 @@ if testingMode:
    
 
     findRectangles(demoImage0, collectionArea[0][0])
+    findRectangles2(demoImage0, collectionArea[0][0])
 
 
     # cv.imshow('image',demoImage0)
