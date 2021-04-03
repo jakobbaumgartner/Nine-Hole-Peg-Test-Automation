@@ -10,6 +10,9 @@ from holdingArea import *
 
 # demo = True -> running test video, demo = False -> running camera
 demo = True
+# testing mode for running just specific functions, not whole program
+testingMode = False
+
 
 settedPinsCounter = 0
 confirmedPins = 0
@@ -19,18 +22,32 @@ allPinsSetted = False
 allPinsDown = False
 start = False
 
-if demo:
+if testingMode:
+    # testing mode for running just specific functions, not whole program
+
     print("\n\n --- DEMO MODE --- \n")
 
     demoImage0 = cv.imread('../DEMO/WIN_20210401_12_22_10_Pro.jpg')
+
+    blurImg, tH, h, s, v = prepareImage(frame)
+
+    findCircles(blurImg, tH)
+
+
+
 
     cv.imshow('image',demoImage0)
     cv.waitKey(0)
     cv.destroyAllWindows()
 
-else:
 
-    cap = cv.VideoCapture(1)
+
+else:
+    if (not demo):
+        cap = cv.VideoCapture(1)
+    else:
+        cap = cv.VideoCapture('../DEMO/TestVideo.mp4')
+
     runningFrameCounter = 0
     setupFrameCounter = 0
     maxFrame = 5
@@ -40,6 +57,8 @@ else:
         # Original frame from video live feed.
 
         setupFrameCounter += 1
+
+       
         ret, frame = cap.read()
 
         if (start == False and setupFrameCounter == 1):
@@ -112,5 +131,7 @@ else:
         cv.imshow('frame', frame)
         if cv.waitKey(1) & 0xFF == ord('q'):
             break
+
+    
     cap.release()
     cv.destroyAllWindows()
