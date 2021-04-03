@@ -2,16 +2,11 @@ import numpy as np
 import cv2 as cv
 import matplotlib.pyplot as plt
 import time
+from tqdm import tqdm
 
 from camera import *
 from detection import *
 from helperMethods import *
-from holdingArea import *
-
-# demo = True -> running test video, demo = False -> running camera
-demo = True
-# testing mode for running just specific functions, not whole program
-testingMode = False
 
 
 settedPinsCounter = 0
@@ -22,23 +17,31 @@ allPinsSetted = False
 allPinsDown = False
 start = False
 
+
+# demo = True -> running test video, demo = False -> running camera
+demo = True
+# testing mode for running just specific functions, not whole program
+testingMode = True
+
+
 if testingMode:
     # testing mode for running just specific functions, not whole program
 
     print("\n\n --- DEMO MODE --- \n")
 
-    demoImage0 = cv.imread('../DEMO/WIN_20210401_12_22_10_Pro.jpg')
+    demoImage0 = cv.imread('../DEMO/WIN_20210401_12_22_29_Pro.jpg')
 
-    blurImg, tH, h, s, v = prepareImage(frame)
+    blurImg, tH, h, s, v = prepareImage(demoImage0)
 
-    findCircles(blurImg, tH)
+    pinsCandidates, collectionArea = findCircles(blurImg, tH)
+   
+
+    findRectangles(demoImage0, collectionArea[0][0])
 
 
-
-
-    cv.imshow('image',demoImage0)
-    cv.waitKey(0)
-    cv.destroyAllWindows()
+    # cv.imshow('image',demoImage0)
+    # cv.waitKey(0)
+    # cv.destroyAllWindows()
 
 
 
