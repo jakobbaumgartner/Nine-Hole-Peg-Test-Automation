@@ -39,7 +39,6 @@ if testingMode:
    
 
     findRectangles(demoImage0, collectionArea[0][0])
-    findRectangles2(demoImage0, collectionArea[0][0])
 
 
     # cv.imshow('image',demoImage0)

@@ -41,7 +41,7 @@ def detectHand(currentSum, startSum):
 def findRectangles(image, circle):
     t = time.time()
     
-    
+
     x1 = int(circle[0] - circle[2] - 30)
     x2 = int(circle[0] + circle[2] + 30)
     y1 = int(circle[1] - circle[2] - 30)
@@ -62,11 +62,22 @@ def findRectangles(image, circle):
 
     edges = cv.Canny(h,50,100)
 
-    elapsed = time.time()-t
-    
+    contours, hierarchy =  cv.findContours(edges, 1,2)
 
-    print(elapsed)
-    cv.imshow('image',edges)
+    area = 0
+    
+    for num, cnt in enumerate(contours):
+        if num%2 == 0:
+            area  += cv.contourArea(cnt)
+            cv.drawContours(image, [cnt], -1, (255,50,25), 3)
+
+    print("Št.pinov:  " +  str(int(area / 3200)))
+   
+   
+   
+   
+    print("\n---\nExecution time [s]: " + str( time.time()-t))
+    cv.imshow('image',image)
     cv.waitKey(0)
     cv.destroyAllWindows()
 
