@@ -3,6 +3,7 @@ import cv2 as cv
 import matplotlib.pyplot as plt
 import time
 from tqdm import tqdm
+import math
 
 
 
@@ -38,7 +39,8 @@ if testingMode:
     pinsCandidates, collectionArea = findCircles(blurImg, tH)
    
 
-    findRectangles(demoImage0, collectionArea[0][0])
+    findRectangles2(demoImage0, collectionArea[0][0])
+    # findRectangles(demoImage0, collectionArea[0][0])
 
 
     # cv.imshow('image',demoImage0)

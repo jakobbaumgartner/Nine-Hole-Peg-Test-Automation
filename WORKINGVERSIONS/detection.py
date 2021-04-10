@@ -2,6 +2,7 @@ import numpy as np
 import cv2 as cv
 import matplotlib.pyplot as plt
 import time
+import math
 from tqdm import tqdm
 
 from helperMethods import *
@@ -119,17 +120,6 @@ def findRectangles(image, circle):
     print("Št.pinov glede na površino:  " +  str(int(area / 3200)))
    
     
-    
-   
-    # cv.circle(image, )
-
-
-
-
-
-
-
-
 
 
     print("\n---\nExecution time [s]: " + str( time.time()-t))
@@ -138,3 +128,111 @@ def findRectangles(image, circle):
     cv.destroyAllWindows()
 
 
+def findRectangles2(image, circle):
+    t = time.time() # algoritem execution time
+    
+    # cut out only area of interest
+    x1 = int(circle[0] - circle[2] - 30) 
+    x2 = int(circle[0] + circle[2] + 30)
+    y1 = int(circle[1] - circle[2] - 30)
+    y2 = int(circle[1] + circle[2] + 30)
+
+    image = image[y1:y2,x1:x2]
+    
+    height, width, channels = image.shape
+
+    image_small = cv.resize(image,(int(width/6), int(height/6)) )
+    
+    # convert to hsv
+    hsv_image = cv.cvtColor(image_small, cv.COLOR_BGR2HSV)
+    h, s, v = cv.split(hsv_image)
+               
+    # blur       
+    # h = cv.GaussianBlur(h, (19,19), 3)
+
+    # treshold
+    h[h > 50] = 255
+
+    # convert image to smaller one, for faster computations
+
+    # h_small = cv.resize(h,(int(width/6), int(height/6)) )
+    h[h > 100] = 255
+    h[h <= 100] = 0
+
+    # detect edges
+    edges = cv.Canny(h,50,100)
+
+    # find contours
+    contours, hierarchy =  cv.findContours(edges, 1,2)
+
+    cv.drawContours(image, contours, -1, (0,255,0), 3)
+
+    half_length = 20 # half of length of peg on its side
+    quarter_length = int(half_length/2)
+
+    
+    s_height, s_width = h.shape
+    both_in = 0
+
+    # print(h.shape)
+ 
+    # go over all elements
+    for y_num, y in enumerate(h):
+        for x_num, x in enumerate(y):
+            for fi in range(-90,90,30):
+                # calculate upper and lower point
+                # (top left if 0,0)
+                upper_x = x_num - half_length * int(math.cos(fi)) 
+                upper_y = y_num - half_length * int(math.sin(fi)) 
+                lower_x = x_num + half_length * int(math.cos(fi)) 
+                lower_y = y_num + half_length * int(math.sin(fi)) 
+
+                # remove points that are out of frame
+                if(upper_x < 0 or upper_y < 0 or lower_x < 0 or lower_y < 0): 
+                    break
+                if(upper_x > s_width-1 or upper_y > s_height-1 or lower_x > s_width-1 or lower_y > s_height-1): 
+                    break
+                
+
+                # check if center point is black ... if it is, than it is on pin
+                if(h[y_num, x_num] < 50):
+                    # check if upper point is black 
+                    if(h[upper_y, upper_x] < 50):
+                        # check if lower point is black
+                        if(h[lower_y, lower_x] < 50):
+                        
+                            # calculate two more points, on quarters o--o--X--o--o
+                            q_upper_x = x_num - quarter_length * int(math.cos(fi)) 
+                            q_upper_y = y_num - quarter_length * int(math.sin(fi)) 
+                            q_lower_x = x_num + quarter_length * int(math.cos(fi)) 
+                            q_lower_y = y_num + quarter_length * int(math.sin(fi)) 
+                            
+                            # check if upper quarter point is in
+                            if(h[q_upper_y, q_upper_x] < 50):
+                                # check if lower quarter point is in
+                                if(h[q_lower_y, q_lower_x] < 50):
+                                    cv.line(image_small, (lower_x, lower_y), (upper_x, upper_y),(0,0,255), 1)
+
+                                    
+                            
+                     
+
+
+                
+
+
+                
+
+
+    
+
+
+    print("\n---\nExecution time [s]: " + str( time.time()-t))
+    cv.namedWindow("h", cv.WINDOW_NORMAL) 
+    # cv.namedWindow("h small", cv.WINDOW_NORMAL) 
+    cv.namedWindow("image_small", cv.WINDOW_NORMAL) 
+    cv.imshow('h',h)
+    # cv.imshow('h small',h_small)
+    cv.imshow('image_small', image_small)
+    cv.waitKey(0)
+    cv.destroyAllWindows()
