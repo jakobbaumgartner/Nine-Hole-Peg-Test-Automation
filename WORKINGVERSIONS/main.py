@@ -39,7 +39,7 @@ if testingMode:
     pinsCandidates, collectionArea = findCircles(blurImg, tH)
    
 
-    findRectangles3(demoImage0, collectionArea[0][0])
+    findRectangles4(demoImage0, collectionArea[0][0])
     # findRectangles(demoImage0, collectionArea[0][0])
 
 

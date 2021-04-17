@@ -6,6 +6,7 @@ import math
 from tqdm import tqdm
 
 from helperMethods import *
+from points import *
 
 
 def findCircles(blurImg, tH):
@@ -425,3 +426,99 @@ def findRectangles3(image, circle):
     cv.imshow('image_small', image_small)
     cv.waitKey(0)
     cv.destroyAllWindows()
+    
+    
+    # TODO:
+    # -> create a better rectangle detection, with more points and width.
+    # -> lower image resolution a bit
+    # -> find how to calculate area of rectangles overlapping
+
+def plotPoints(img, center, height, width, s, delta, fi, color):
+    """ plots points of shape detector """
+
+    print("delta:" + str(delta))
+    print("\nfi: " + str(fi))
+    sin_fi_de = math.sin((fi + delta)*math.pi/180)
+    cos_fi_de = math.cos((fi + delta)*math.pi/180)
+    sin_fi_mde = math.sin((fi - delta)*math.pi/180)
+    cos_fi_mde = math.cos((fi - delta)*math.pi/180)
+    # cot_fi_de = math.tan(90 - fi)
+
+    for point in redPoints(center, height, width, s, sin_fi_de, cos_fi_de, sin_fi_mde, cos_fi_mde, delta):
+        cv.circle(img, (int(point[0]), int(point[1])), 0, color, 4)
+        print(point)
+
+    cv.line(img, (center[0], center[1]), (center[0] + int(s * math.sin(fi*math.pi/180)), center[1] + int(s * math.cos(fi*math.pi/180))),(255,0,0))
+
+
+
+
+
+def findRectangles4(image, circle):
+    t = time.time() # algoritem execution time
+    
+    # cut out only area of interest
+    x1 = int(circle[0] - circle[2] - 30) 
+    x2 = int(circle[0] + circle[2] + 30)
+    y1 = int(circle[1] - circle[2] - 30)
+    y2 = int(circle[1] + circle[2] + 30)
+
+    image = image[y1:y2,x1:x2]
+    
+    height, width, channels = image.shape
+
+    image_small = cv.resize(image,(int(width/2), int(height/2)) )
+    
+    # convert to hsv
+    hsv_image = cv.cvtColor(image_small, cv.COLOR_BGR2HSV)
+    h, s, v = cv.split(hsv_image)
+               
+    # blur       
+    # h = cv.GaussianBlur(h, (19,19), 3)
+
+    # treshold
+    h[h > 50] = 255
+
+    # convert image to smaller one, for faster computations
+
+    # h_small = cv.resize(h,(int(width/6), int(height/6)) )
+    h[h > 100] = 255
+    h[h <= 100] = 0
+
+    # detect edges
+    edges = cv.Canny(h,50,100)
+
+    # find contours
+    contours, hierarchy =  cv.findContours(edges, 1,2)
+
+    cv.drawContours(image_small, contours, -1, (0,255,0), 3)
+
+    width = 3
+    height = 25
+    s = math.sqrt(width**2 + height**2)
+    delta = math.acos(height/s)*180/math.pi
+
+    s_height, s_width = h.shape
+
+    fi = 105
+    
+    plotPoints(image_small, [168, 85], height, width, s, delta, fi, (0,0,255))
+        
+
+    print("\n---\nExecution time [s]: " + str( time.time()-t))
+    # cv.namedWindow("h", cv.WINDOW_NORMAL) 
+    cv.namedWindow("image_small", cv.WINDOW_NORMAL) 
+    # cv.imshow('h',h)
+    cv.imshow("image", image)
+    cv.imshow('image_small', image_small)
+    cv.waitKey(0)
+    cv.destroyAllWindows()
+    
+    
+    # TODO:
+    # -> create a better rectangle detection, with more points and width.
+    # -> lower image resolution a bit
+    # -> find how to calculate area of rectangles overlapping
+
+
+ 
