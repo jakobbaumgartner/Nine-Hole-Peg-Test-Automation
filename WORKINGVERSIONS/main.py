@@ -10,6 +10,8 @@ import math
 from camera import *
 from detection import *
 from helperMethods import *
+from imagePrepare import getHalf, cutImage
+from findPossiblePins import *
 
 
 settedPinsCounter = 0
@@ -29,23 +31,80 @@ testingMode = True
 
 if testingMode:
     # testing mode for running just specific functions, not whole program
-
     print("\n\n --- DEMO MODE --- \n")
+    t = time.time()
+    #   ---------------------------------         
+    #   ---------------------------------       
+        
+    demoImage0 = cv.imread('../DEMO/WIN_20210401_12_22_21_Pro.jpg')
+    image = cutImage(demoImage0)
+    
+    img, h = getHalf(demoImage0, "left")
 
-    demoImage0 = cv.imread('../DEMO/WIN_20210401_12_22_29_Pro.jpg')
+    
 
-    blurImg, tH, h, s, v = prepareImage(demoImage0)
+    height = 50
+    width = 6
 
-    pinsCandidates, collectionArea = findCircles(blurImg, tH)
-   
+    # h, img = plotPoints(h, img, [305,305], height, width, 45)
 
-    findRectangles4(demoImage0, collectionArea[0][0])
-    # findRectangles(demoImage0, collectionArea[0][0])
+    possiblePins = findPinsLeft(h, height, width)
+
+    for pin in possiblePins:
+     
+        cv.circle(img, (int(pin[0][0]), int(pin[0][1])), 1, (255,0,0))
+      
+        
+    print(len(possiblePins))
 
 
-    # cv.imshow('image',demoImage0)
-    # cv.waitKey(0)
-    # cv.destroyAllWindows()
+
+    
+    
+
+
+    print("\n---\nExecution time [s]: " + str( time.time()-t))
+    cv.namedWindow("h", cv.WINDOW_NORMAL) 
+    cv.namedWindow("image", cv.WINDOW_NORMAL) 
+    cv.imshow('h',h)
+    cv.imshow('image',img)
+    cv.waitKey(0)
+    cv.destroyAllWindows()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
