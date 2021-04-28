@@ -4,14 +4,18 @@ import matplotlib.pyplot as plt
 import time
 from tqdm import tqdm
 import math
-
-
+import random
+import itertools
+from shapely.geometry import LineString
 
 from camera import *
 from detection import *
 from helperMethods import *
 from imagePrepare import getHalf, cutImage
 from findPossiblePins import *
+from drawRect import *
+from rectanglesIntersect import *
+from pinCombos import *
 
 
 settedPinsCounter = 0
@@ -40,27 +44,64 @@ if testingMode:
     image = cutImage(demoImage0)
     
     img, h = getHalf(demoImage0, "left")
+    s_height, s_width = h.shape
+    h = cv2.resize(h, (int(s_height/4), int(s_width/4)))
+    img = cv2.resize(img, (int(s_height/4), int(s_width/4)))
 
     
 
-    height = 50
-    width = 6
+    height = 12.5
+    width = 3
 
-    # h, img = plotPoints(h, img, [305,305], height, width, 45)
+    h, img = plotPoints(h, img, [80,85], height, width, 0)
 
     possiblePins = findPinsLeft(h, height, width)
 
+    # for pin in possiblePins:
+    #     botTop = darkBluePoints(pin[0], height, width, pin[1])
+    #     cv.line(img, (int(botTop[0][0]), int(botTop[0][1])), (int(botTop[1][0]), int(botTop[1][1])), (0,255,0))
+    #     # cv.circle(img, (int(pin[0][0]), int(pin[0][1])), 0, (255,0,0))
+    #     print(pin[1])
+
     for pin in possiblePins:
-     
-        cv.circle(img, (int(pin[0][0]), int(pin[0][1])), 1, (255,0,0))
-      
+        # botTop = darkBluePoints(pin[0], height, width, pin[1])
+        # cv.line(img, (int(botTop[0][0]), int(botTop[0][1])), (int(botTop[1][0]), int(botTop[1][1])), (0,255,0))
+        cv.circle(img, (int(pin[0][0]), int(pin[0][1])), 0, (255,0,0))
         
-    print(len(possiblePins))
+
+        
+    # print(len(possiblePins))
+
+    filtered = filteredCandidates(possiblePins, 5, 5)
 
 
+    for pin in filtered:
+        botTop = darkBluePoints(pin[0], height, width, pin[1])
+        cv.line(img, (int(botTop[0][0]), int(botTop[0][1])), (int(botTop[1][0]), int(botTop[1][1])), (0,255,0))
 
+    s = math.sqrt(width**2 + height**2)
+    delta = math.acos(height/s)*180/math.pi 
+
+    for pin in filtered:
+        cv.circle(img, (int(pin[0][0]), int(pin[0][1])), 0, (0,0,255))
+        # print(pin)
+        # points = redPoints((pin[0][0], pin[0][1]), height, width, s, pin[1], delta)
+        color = (random.randint(1,255), random.randint(1,255), random.randint(1,255))
+        filledRect(h, img, pin, width, height, color)
+
+        # print("\nP: " + str((points[0][0], points[0][1])))
+        # cv.rectangle(img, (int(points[0][0]), int(points[0][1])), (int(points[3][0]), int(points[3][1])), (255,0, 0), -1)
+        # res = cv.minAreaRect([(int(points[0][0]), int(points[0][1])), (int(points[3][0]), int(points[3][1])),(int(points[2][0]), int(points[2][1])), (int(points[1][0]), int(points[1][1]))])
+        # print("\nres: " + str(res))
     
-    
+
+    # get list of allowed pins for each pin
+    # dictOfAllowed = getListOfAllowed(filtered, height, width, s, delta)
+    dictCovered = getListOfCovering(filtered, height, width, s, delta)
+
+
+
+
 
 
     print("\n---\nExecution time [s]: " + str( time.time()-t))

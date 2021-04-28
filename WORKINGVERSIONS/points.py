@@ -123,29 +123,29 @@ def plotPoints(h, img, center, height, width, fi):
 
 
     for point in darkBluePoints(center, height, width, fi):
-        cv.circle(img, (int(point[0]), int(point[1])), 0, (255,0,0), 4)
-        cv.circle(h, (int(point[0]), int(point[1])), 0, 0, 4)
-        print(point)
+        cv.circle(img, (int(point[0]), int(point[1])), 0, (255,0,0), 0)
+        cv.circle(h, (int(point[0]), int(point[1])), 0, 0, 0)
+        # print(point)
 
     for point in redPoints(center, height, width, s, fi, delta):
-        cv.circle(img, (int(point[0]), int(point[1])), 0, (0,0,255), 4)
-        cv.circle(h, (int(point[0]), int(point[1])), 0, 0, 4)
-        print(point)
+        cv.circle(img, (int(point[0]), int(point[1])), 0, (0,0,255), 0)
+        cv.circle(h, (int(point[0]), int(point[1])), 0, 0, 0)
+        # print(point)
     
     for point in yellowPoints(center, height, width, fi):
-        cv.circle(img, (int(point[0]), int(point[1])), 0, (0,128,255), 4)
-        cv.circle(h, (int(point[0]), int(point[1])), 0, 0, 4)
-        print(point)
+        cv.circle(img, (int(point[0]), int(point[1])), 0, (0,128,255), 0)
+        cv.circle(h, (int(point[0]), int(point[1])), 0, 0, 0)
+        # print(point)
     
     for point in pinkPoints(center, height, width, fi):
-        cv.circle(img, (int(point[0]), int(point[1])), 0, (192,128,255), 4)
-        cv.circle(h, (int(point[0]), int(point[1])), 0, 0, 4)
-        print(point)
+        cv.circle(img, (int(point[0]), int(point[1])), 0, (192,128,255), 0)
+        cv.circle(h, (int(point[0]), int(point[1])), 0, 0, 0)
+        # print(point)
 
     for point in brownPoints(center, width, fi):
-        cv.circle(img, (int(point[0]), int(point[1])), 0, (0,63,127), 4)
-        cv.circle(h, (int(point[0]), int(point[1])), 0, 0, 4)
-        print(point)
+        cv.circle(img, (int(point[0]), int(point[1])), 0, (0,63,127), 0)
+        cv.circle(h, (int(point[0]), int(point[1])), 0, 0, 0)
+        # print(point)
 
     cv.line(img, (center[0], center[1]), (center[0] + int(s * math.sin(fi*math.pi/180)), center[1] + int(s * math.cos(fi*math.pi/180))),(255,0,0))
     

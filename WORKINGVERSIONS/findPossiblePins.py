@@ -2,6 +2,8 @@ import math
 from tqdm import tqdm
 from imagePrepare import *
 from points import *
+import itertools
+from drawRect import *
 
 def checkPoints(h, points):
     """
@@ -18,7 +20,11 @@ def checkPoints(h, points):
 
 
 def findPinsLeft(h, height, width):
-    """ find possible pins, that are still in holding area """
+    """ 
+        find possible pins, that are still in holding area 
+
+        return: list([center, fi])
+    """
 
     s = math.sqrt(width**2 + height**2)
     delta = math.acos(height/s)*180/math.pi
@@ -36,7 +42,7 @@ def findPinsLeft(h, height, width):
             
             if(h[y_num, x_num] > 50):  # check if center point is black ... if it is, than it is on pin
 
-                for fi in range(-90,90,5): # for each point check all possible rotations ( but not "mirrored" )
+                for fi in range(-90,90,10): # for each point check all possible rotations ( but not "mirrored" )
                     status = True # if all tests check out, point is center of a pin
 
                     cornerPoints = redPoints([x_num, y_num], height, width,s, fi, delta)
@@ -77,5 +83,57 @@ def findPinsLeft(h, height, width):
     return possiblePins
                     
                     
+
+def filteredCandidates ( possiblePins, radious, fiErr):
+    """
+        checks possiblePins, returns only a few most likely locations of pins
+        for each pin location iterates over every pin and sums number of pins in the same direction
+    
+        return: list([center, fi, sumOfpins, pinNum])
+
+        sumOfpins - number of similarily layed pins in proximity
+
+        pinNum - pin designation number
+    """
+    allPins = [] # possiblePins with added number of close pins
+
+    radiousSq = radious**2
+
+    for pinOfInt in tqdm(possiblePins):
+
+        sumOfPins = 0
+        # iterate over every other pin location and return number of close pins looking in the same direction
+        for pin in possiblePins:
+            if(abs(pin[1]-pinOfInt[1]) < fiErr): # check if pins are alligned
+                if((pin[0][0] - pinOfInt[0][0])**2 + (pin[0][1] - pinOfInt[0][1])**2 < radiousSq): # check if pins centers are close
+                    sumOfPins += 1
+        
+        allPins.append([pinOfInt[0], pinOfInt[1], sumOfPins])
+    
+    filtered = []
+
+    # sort pins from one with most relatives in proximity to one with least
+    allPins.sort(key = lambda x : x[2], reverse = True)   
+
+    finalPins = []
+    counter0 = 0
+    # only keep pins with most relatives
+    for pinOfInt in allPins:
+        exists = False
+        for pin in (finalPins):
+            if(abs(pin[1]-pinOfInt[1]) < fiErr and (pin[0][0] - pinOfInt[0][0])**2 + (pin[0][1] - pinOfInt[0][1])**2 < radiousSq): # check if pins are alligned and check if pins centers are close
+                exists = True
+                      
+        if(not exists):
+            
+            pinOfInt.append(counter0)
+            counter0 += 1
+            print(pinOfInt)
+            finalPins.append(pinOfInt)
+
+    print("\npossible pins: " + str(len(possiblePins)))
+    print("\nfilanPins: " + str(len(finalPins)))
+
+    return finalPins
 
 
