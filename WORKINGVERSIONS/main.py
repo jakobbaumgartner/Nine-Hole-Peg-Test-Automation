@@ -41,13 +41,26 @@ if testingMode:
     #   ---------------------------------         
     #   ---------------------------------       
         
-    demoImage0 = cv.imread('../DEMO/WIN_20210401_12_22_29_Pro.jpg')
-    image = cutImage(demoImage0)
+    demoImage0 = cv.imread('../DEMO/WIN_20210401_12_22_29_Pro - right.jpg')
+
+
     
-    img, h = getHalf(demoImage0, "left")
+
+    image = cutImage(demoImage0)
+
+
+    
+    img, h = getHalf(image, "right")
+
+    cv2.imshow("demo0", demoImage0)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
+    
+
     s_height, s_width = h.shape
-    h = cv2.resize(h, (int(s_height/4), int(s_width/4)))
-    img = cv2.resize(img, (int(s_height/4), int(s_width/4)))
+    h = cv.resize(h, (int(s_height/4), int(s_width/4)))
+    img = cv.resize(img, (int(s_height/4), int(s_width/4)))
 
     
 
