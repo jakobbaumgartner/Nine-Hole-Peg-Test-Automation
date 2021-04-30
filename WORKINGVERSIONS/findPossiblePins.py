@@ -128,11 +128,11 @@ def filteredCandidates ( possiblePins, radious, fiErr):
             
             pinOfInt.append(counter0)
             counter0 += 1
-            print(pinOfInt)
+            
             finalPins.append(pinOfInt)
 
-    print("\npossible pins: " + str(len(possiblePins)))
-    print("\nfilanPins: " + str(len(finalPins)))
+    print("\nAll pins: " + str(len(possiblePins)))
+    print("\nPins left:  " + str(len(finalPins)) + "\n")
 
     return finalPins
 

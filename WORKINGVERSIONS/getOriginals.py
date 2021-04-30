@@ -27,17 +27,12 @@ def lessCovered(pins, height, width, s, delta):
                 if(address0 != address1): # if we have same address twice ... skip it
                     if(not address1 in adressesRemoved): # if address is already removed ... skip it
                         element1 = next(filter(lambda pin: pin[3] == address1, pins)) # get value of element
-                        if(chechIntersection(element0, element1, height, width, s, delta)):
+                        if(chechIntersection(element0, element1, height, width, s, delta)): # if two pins intersect
                             
-                            # pinsR = [pin for pin in pins if not(pin[3] in adressesRemoved)]
-                            # print(pinsR)
+                            # check which two of two pins has more intersecting pins and remove it
                             cov0 = getNumofCovered(element0, pins, height, width, s, delta)
                             cov1 = getNumofCovered(element1, pins, height, width, s, delta)
 
-                            print("---> " + str(element0))
-                            print(pins)
-                            
-                            print("cov0: " + str(cov0) + "  cov1: " + str(cov1))
 
                             if(cov0 > cov1):
                                 pins.remove(element0)

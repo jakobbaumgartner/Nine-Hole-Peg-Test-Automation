@@ -41,20 +41,12 @@ if testingMode:
     #   ---------------------------------         
     #   ---------------------------------       
         
-    demoImage0 = cv.imread('../DEMO/WIN_20210401_12_22_29_Pro - right.jpg')
-
-
-    
+    demoImage0 = cv.imread('../DEMO/WIN_20210401_12_22_21_Pro.jpg')
 
     image = cutImage(demoImage0)
-
-
     
-    img, h = getHalf(image, "right")
+    img, h = getHalf(image, "left")
 
-    cv2.imshow("demo0", demoImage0)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
 
     
 
@@ -77,6 +69,8 @@ if testingMode:
     #     # cv.circle(img, (int(pin[0][0]), int(pin[0][1])), 0, (255,0,0))
     #     print(pin[1])
 
+
+
     # for pin in possiblePins:
     #     # botTop = darkBluePoints(pin[0], height, width, pin[1])
     #     # cv.line(img, (int(botTop[0][0]), int(botTop[0][1])), (int(botTop[1][0]), int(botTop[1][1])), (0,255,0))
@@ -86,23 +80,13 @@ if testingMode:
         
     # print(len(possiblePins))
 
-    # filtered = filteredCandidates(possiblePins, 5, 5)
+    possiblePins = filteredCandidates(possiblePins, 2, 2)
 
-    for num,pin in enumerate(possiblePins):
-        print(pin)
-        pin.append(num)
-        pin.append(num)
-        print(pin)
-
-    random.shuffle(possiblePins)
-    
-
-    # for pin in filtered:
-    #     botTop = darkBluePoints(pin[0], height, width, pin[1])
-    #     cv.line(img, (int(botTop[0][0]), int(botTop[0][1])), (int(botTop[1][0]), int(botTop[1][1])), (0,255,0))
 
     s = math.sqrt(width**2 + height**2)
     delta = math.acos(height/s)*180/math.pi 
+
+    random.shuffle(possiblePins)
 
     pins = lessCovered(possiblePins, height, width, s, delta)
 
