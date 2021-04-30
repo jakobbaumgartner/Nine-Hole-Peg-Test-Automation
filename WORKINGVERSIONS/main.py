@@ -41,11 +41,16 @@ if testingMode:
     #   ---------------------------------         
     #   ---------------------------------       
         
-    demoImage0 = cv.imread('../DEMO/WIN_20210401_12_22_21_Pro.jpg')
+    demoImage0 = cv.imread('../DEMO/WIN_20210401_12_22_01_Pro.jpg')
 
     image = cutImage(demoImage0)
     
     img, h = getHalf(image, "left")
+
+    cv2.imshow("demo0", h)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
 
 
     
@@ -82,15 +87,49 @@ if testingMode:
 
     possiblePins = filteredCandidates(possiblePins, 2, 2)
 
+    # for num,pin in enumerate(possiblePins):
+    #     print(pin)
+    #     pin.append(num)
+    #     pin.append(num)
+    #     print(pin)
+
+   
+        
+
+    # for pin in filtered:
+    #     botTop = darkBluePoints(pin[0], height, width, pin[1])
+    #     cv.line(img, (int(botTop[0][0]), int(botTop[0][1])), (int(botTop[1][0]), int(botTop[1][1])), (0,255,0))
 
     s = math.sqrt(width**2 + height**2)
     delta = math.acos(height/s)*180/math.pi 
 
-    random.shuffle(possiblePins)
+    # run detection 10 times, so that we get optimal configuration of detected pins
+    results = []
 
-    pins = lessCovered(possiblePins, height, width, s, delta)
+    for i in range(5):
+
+        pins2 = possiblePins.copy()
+
+        random.shuffle(pins2)
+
+        pins = lessCovered(pins2, height, width, s, delta)
+
+        results.append([len(pins), pins])
+
+    # sort results, take out one with max number of detected pins
+    results = sorted(results,key=lambda x: x[0], reverse=True)
+    print("\n\nRESULTS:")
+    print(results[0])
+
+    for elem in results:
+        print(elem)
+
+    pins = results[0][1]
+    print(pins)
+    
 
     for pin in pins:
+        print(pin)
         cv.circle(img, (int(pin[0][0]), int(pin[0][1])), 0, (0,0,255))
         # print(pin)
         # points = redPoints((pin[0][0], pin[0][1]), height, width, s, pin[1], delta)

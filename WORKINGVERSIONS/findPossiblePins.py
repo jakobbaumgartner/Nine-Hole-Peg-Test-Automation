@@ -42,7 +42,7 @@ def findPinsLeft(h, height, width):
             
             if(h[y_num, x_num] > 50):  # check if center point is black ... if it is, than it is on pin
 
-                for fi in range(-90,90,10): # for each point check all possible rotations ( but not "mirrored" )
+                for fi in range(-90,90,5): # for each point check all possible rotations ( but not "mirrored" )
                     status = True # if all tests check out, point is center of a pin
 
                     cornerPoints = redPoints([x_num, y_num], height, width,s, fi, delta)
