@@ -30,7 +30,7 @@ def getListOfCovering (pins, height, width, s, delta):
         create list of covered pins for each pin, so that we know which combos are covered
         example: if pin 1 overlaps with pin 4 , pin 4 is covered
 
-        return dictOfAllowed
+        return dict of Covered
     """
 
     dictCovered = {}
@@ -47,6 +47,23 @@ def getListOfCovering (pins, height, width, s, delta):
 
 
     return dictCovered
+
+
+
+def getNumofCovered (pin0, pins, height, width, s, delta):
+    """
+       returns number of pins that overlap with pin
+    """
+
+    num = 0
+
+    for pin in pins:
+        if(pin != pin0):
+            if(chechIntersection(pin0, pin, height, width, s, delta)):
+                num += 1
+ 
+    return num
+        
         
 
 

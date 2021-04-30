@@ -16,6 +16,7 @@ from findPossiblePins import *
 from drawRect import *
 from rectanglesIntersect import *
 from pinCombos import *
+from getOriginals import *
 
 
 settedPinsCounter = 0
@@ -40,7 +41,7 @@ if testingMode:
     #   ---------------------------------         
     #   ---------------------------------       
         
-    demoImage0 = cv.imread('../DEMO/WIN_20210401_12_22_21_Pro.jpg')
+    demoImage0 = cv.imread('../DEMO/WIN_20210401_12_22_29_Pro.jpg')
     image = cutImage(demoImage0)
     
     img, h = getHalf(demoImage0, "left")
@@ -53,7 +54,7 @@ if testingMode:
     height = 12.5
     width = 3
 
-    h, img = plotPoints(h, img, [80,85], height, width, 0)
+    # h, img = plotPoints(h, img, [80,85], height, width, 0)
 
     possiblePins = findPinsLeft(h, height, width)
 
@@ -63,46 +64,50 @@ if testingMode:
     #     # cv.circle(img, (int(pin[0][0]), int(pin[0][1])), 0, (255,0,0))
     #     print(pin[1])
 
-    for pin in possiblePins:
-        # botTop = darkBluePoints(pin[0], height, width, pin[1])
-        # cv.line(img, (int(botTop[0][0]), int(botTop[0][1])), (int(botTop[1][0]), int(botTop[1][1])), (0,255,0))
-        cv.circle(img, (int(pin[0][0]), int(pin[0][1])), 0, (255,0,0))
+    # for pin in possiblePins:
+    #     # botTop = darkBluePoints(pin[0], height, width, pin[1])
+    #     # cv.line(img, (int(botTop[0][0]), int(botTop[0][1])), (int(botTop[1][0]), int(botTop[1][1])), (0,255,0))
+    #     cv.circle(img, (int(pin[0][0]), int(pin[0][1])), 0, (255,0,0))
         
 
         
     # print(len(possiblePins))
 
-    filtered = filteredCandidates(possiblePins, 5, 5)
+    # filtered = filteredCandidates(possiblePins, 5, 5)
 
+    for num,pin in enumerate(possiblePins):
+        print(pin)
+        pin.append(num)
+        pin.append(num)
+        print(pin)
 
-    for pin in filtered:
-        botTop = darkBluePoints(pin[0], height, width, pin[1])
-        cv.line(img, (int(botTop[0][0]), int(botTop[0][1])), (int(botTop[1][0]), int(botTop[1][1])), (0,255,0))
+    random.shuffle(possiblePins)
+    
+
+    # for pin in filtered:
+    #     botTop = darkBluePoints(pin[0], height, width, pin[1])
+    #     cv.line(img, (int(botTop[0][0]), int(botTop[0][1])), (int(botTop[1][0]), int(botTop[1][1])), (0,255,0))
 
     s = math.sqrt(width**2 + height**2)
     delta = math.acos(height/s)*180/math.pi 
 
-    for pin in filtered:
+    pins = lessCovered(possiblePins, height, width, s, delta)
+
+    for pin in pins:
         cv.circle(img, (int(pin[0][0]), int(pin[0][1])), 0, (0,0,255))
         # print(pin)
         # points = redPoints((pin[0][0], pin[0][1]), height, width, s, pin[1], delta)
         color = (random.randint(1,255), random.randint(1,255), random.randint(1,255))
         filledRect(h, img, pin, width, height, color)
 
-        # print("\nP: " + str((points[0][0], points[0][1])))
-        # cv.rectangle(img, (int(points[0][0]), int(points[0][1])), (int(points[3][0]), int(points[3][1])), (255,0, 0), -1)
-        # res = cv.minAreaRect([(int(points[0][0]), int(points[0][1])), (int(points[3][0]), int(points[3][1])),(int(points[2][0]), int(points[2][1])), (int(points[1][0]), int(points[1][1]))])
-        # print("\nres: " + str(res))
+
     
 
     # get list of allowed pins for each pin
     # dictOfAllowed = getListOfAllowed(filtered, height, width, s, delta)
-    dictCovered = getListOfCovering(filtered, height, width, s, delta)
+    # dictCovered = getListOfCovering(filtered, height, width, s, delta)
 
-
-
-
-
+    
 
     print("\n---\nExecution time [s]: " + str( time.time()-t))
     cv.namedWindow("h", cv.WINDOW_NORMAL) 
