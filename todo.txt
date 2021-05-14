@@ -1,3 +1,0 @@
-1. pojdi čez elemente, poglej, če se seka s kakim elementom
-2. če se seka poglej s koliko elementi se seka vsak od pinov
-3. izloči iz seznama tisti pin, ki se seka z večimi drugimi pini

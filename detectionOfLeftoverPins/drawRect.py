@@ -7,7 +7,7 @@ def filledRect(h,img, point, width, height, color):
     draws a filled rect with given 4 points
     """
 
-    for w in range(0,width,1):
+    for w in range(0,int(width),1):
         s = math.sqrt(w**2 + height**2)
         delta = math.acos(height/s)*180/math.pi
         points = redPoints((point[0][0], point[0][1]), height, w, s, point[1], delta)

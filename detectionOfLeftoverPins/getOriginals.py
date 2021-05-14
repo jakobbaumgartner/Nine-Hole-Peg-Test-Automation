@@ -48,7 +48,7 @@ def lessCovered(pins, height, width, s, delta):
                                 pins.remove(element1)
                                 adressesRemoved.append(address1)
                         
-    print(pins)
+    print(len(pins))
 
     return pins
                         # print((element1))
